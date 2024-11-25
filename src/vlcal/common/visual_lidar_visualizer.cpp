@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include <vlcal/common/visual_lidar_visualizer.hpp>
 
 #include <opencv2/highgui.hpp>
@@ -91,7 +93,33 @@ void VisualLiDARVisualizer::save_images(const std::string& data_path) {
 void VisualLiDARVisualizer::save_point_clouds(const std::string& data_path) {
   for (int i = 0; i < dataset.size(); i++) {
     const std::string filename = data_path + "/points_" + std::to_string(i) + ".ply";
-    dataset[i]->points->write(filename);
+
+    // Extract points from the dataset
+    const auto& points_storage = dataset[i]->points->points_storage;
+
+    // Open the file to write the PLY format
+    std::ofstream ofs(filename);
+    if (!ofs.is_open()) {
+      std::cerr << "Failed to open file for writing: " << filename << std::endl;
+      continue;
+    }
+
+    // Write PLY header
+    ofs << "ply\n";
+    ofs << "format ascii 1.0\n";
+    ofs << "element vertex " << points_storage.size() << "\n";
+    ofs << "property float x\n";
+    ofs << "property float y\n";
+    ofs << "property float z\n";
+    ofs << "end_header\n";
+
+    // Write points
+    for (const auto& point : points_storage) {
+      ofs << point.x() << " " << point.y() << " " << point.z() << "\n";
+    }
+
+    ofs.close();
+    std::cout << "Saved point cloud to " << filename << std::endl;
   }
 }
 
