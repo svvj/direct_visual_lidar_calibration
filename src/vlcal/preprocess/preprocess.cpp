@@ -194,6 +194,7 @@ bool Preprocess::run(int argc, char** argv) {
     T_lidar_camera.linear() = (Eigen::AngleAxisd(-M_PI_2, Eigen::Vector3d::UnitX())).toRotationMatrix();
     lidar_camera_model = "equirectangular";
     lidar_camera_intrinsics = {static_cast<double>(lidar_image_size[0]), static_cast<double>(lidar_image_size[1])};
+    intrinsics = {image_size.width, image_size.height};
   }
 
   auto lidar_proj = camera::create_camera(lidar_camera_model, lidar_camera_intrinsics, {});
