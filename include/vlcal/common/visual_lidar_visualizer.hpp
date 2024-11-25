@@ -35,6 +35,9 @@ public:
   int get_selected_bag_id() const { return selected_bag_id; }
   double get_image_display_scale() const { return image_display_scale; }
 
+  void save_images(const std::string& data_path);
+  void save_point_clouds(const std::string& data_path);
+
   bool spin_once();
 
 private:

@@ -81,6 +81,20 @@ void VisualLiDARVisualizer::set_T_camera_lidar(const Eigen::Isometry3d& T_camera
   this->T_camera_lidar = T_camera_lidar;
 }
 
+void VisualLiDARVisualizer::save_images(const std::string& data_path) {
+  for (int i = 0; i < dataset.size(); i++) {
+    const std::string filename = data_path + "/image_" + std::to_string(i) + ".png";
+    cv::imwrite(filename, dataset[i]->image);
+  }
+}
+
+void VisualLiDARVisualizer::save_point_clouds(const std::string& data_path) {
+  for (int i = 0; i < dataset.size(); i++) {
+    const std::string filename = data_path + "/points_" + std::to_string(i) + ".ply";
+    dataset[i]->points->write(filename);
+  }
+}
+
 bool VisualLiDARVisualizer::spin_once() {
   auto viewer = guik::LightViewer::instance();
   return viewer->spin_once();

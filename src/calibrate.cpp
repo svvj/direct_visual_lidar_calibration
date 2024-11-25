@@ -144,6 +144,10 @@ public:
     sst << T_lidar_camera.matrix() << std::endl;
     sst << "saved to " << data_path + "/calib.json";
 
+    // save images, point clouds
+    vis.save_images(data_path);
+    vis.save_point_clouds(data_path);
+
     viewer->append_text(sst.str());
     viewer->spin_once();
 
