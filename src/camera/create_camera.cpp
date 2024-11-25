@@ -17,6 +17,12 @@ template <typename Projection>
 camera::GenericCameraBase::ConstPtr create_camera(const std::vector<double>& intrinsics, const std::vector<double>& distortion_coeffs) {
   if (intrinsics.size() != camera::CameraModelTraits<Projection>::num_intrinsic_params) {
     std::cerr << vlcal::console::bold_red << "error: num of intrinsic parameters mismatch!!" << vlcal::console::reset << std::endl;
+    std::cerr << vlcal::console::bold_red << "num of intrinsic parameters: " << intrinsics.size() << vlcal::console::reset << std::endl;
+    std::cerr << vlcal::console::bold_red << "desired num of intrinsic parameters: " << camera::CameraModelTraits<Projection>::num_intrinsic_params << vlcal::console::reset << std::endl;
+    for (int i = 0; i < intrinsics.size() ; i++)
+    {
+      std::cerr << vlcal::console::bold_red << "intrinsic[" << i << "]: " << intrinsics[i] << vlcal::console::reset << std::endl;
+    }
     return nullptr;
   }
 
