@@ -5,6 +5,7 @@
 #include <rosbag2_cpp/readers/sequential_reader.hpp>
 #include <rosbag2_storage/storage_filter.hpp>
 
+#include <opencv2/imgcodecs.hpp> 
 #ifdef CV_BRIDGE_INCLUDE_H
 #include <cv_bridge/cv_bridge.h>
 #elif CV_BRIDGE_INCLUDE_HPP
@@ -111,13 +112,27 @@ protected:
   }
 
   virtual cv::Size get_image_size(const std::string& bag_filename, const std::string& image_topic) override {
+    // Loading image from rosbag
+    std::string dst_path = bag_filename.substr(0, bag_filename.find_last_of("/"));
+    std::string original_image_path = dst_path + "/original_image.png";
+
     if (image_topic.find("compressed") == std::string::npos) {
       const auto image_msg = get_first_message<sensor_msgs::msg::Image>(bag_filename, image_topic);
+      cv::Mat image = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
+      
+      // Save original image  
+      cv::imwrite(original_image_path, image);
+      
       return cv::Size(image_msg->width, image_msg->height);
     }
 
     const auto image_msg = get_first_message<sensor_msgs::msg::CompressedImage>(bag_filename, image_topic);
-    return cv_bridge::toCvCopy(*image_msg, "mono8")->image.size();
+    cv::Mat image = cv_bridge::toCvCopy(*image_msg, "mono8")->image;
+    
+    // Save original image
+    cv::imwrite(original_image_path, image);
+    
+    return image.size();
   }
 
   virtual std::tuple<std::string, std::vector<double>, std::vector<double>> get_camera_info(const std::string& bag_filename, const std::string& camera_info_topic) override {

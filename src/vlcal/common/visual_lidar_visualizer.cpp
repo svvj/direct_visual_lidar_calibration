@@ -87,6 +87,8 @@ void VisualLiDARVisualizer::save_images(const std::string& data_path) {
   for (int i = 0; i < dataset.size(); i++) {
     const std::string filename = data_path + "/image_" + std::to_string(i) + ".png";
     cv::imwrite(filename, dataset[i]->image);
+    
+    std::cout << "Saved images to " << filename << std::endl;
   }
 }
 

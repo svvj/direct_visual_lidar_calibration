@@ -1,3 +1,4 @@
+.vscode*
 site/*
 rosbag_input/*
 360_sample_data/*
