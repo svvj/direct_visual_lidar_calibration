@@ -417,6 +417,8 @@ std::pair<cv::Mat, Frame::ConstPtr> Preprocess::get_image_and_points(
     std::cerr << vlcal::console::bold_red << "error: failed to obtain an image (image_topic=" << image_topic << ")" << vlcal::console::reset << std::endl;
     abort();
   }
+
+  cv::imshow("Original image", image);
   cv::equalizeHist(image.clone(), image);
 
   // integrate points
